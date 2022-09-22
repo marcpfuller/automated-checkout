@@ -38,7 +38,7 @@ func (c *Controller) DeltaInventorySKUPost(writer http.ResponseWriter, req *http
 
 		// load the inventory.json file
 		var inventoryItems Products
-		err = utilities.LoadFromJSONFile(InventoryFileName, &inventoryItems)
+		err = utilities.LoadFromJSONFile(c.inventoryFileName, &inventoryItems)
 		if err != nil {
 			c.lc.Errorf("Failed to retrieve all inventory items: %s", err.Error())
 			utilities.WriteStringHTTPResponse(writer, req, http.StatusInternalServerError, "Failed to retrieve all inventory items: "+err.Error(), true)
@@ -68,7 +68,7 @@ func (c *Controller) DeltaInventorySKUPost(writer http.ResponseWriter, req *http
 		}
 
 		// Write the updated inventory to the inventory json file
-		err = utilities.WriteToJSONFile(InventoryFileName, inventoryItems, 0644)
+		err = utilities.WriteToJSONFile(c.inventoryFileName, inventoryItems, 0644)
 		if err != nil {
 			c.lc.Errorf("Failed to write inventory: %s", err.Error())
 			utilities.WriteStringHTTPResponse(writer, req, http.StatusInternalServerError, "Failed to write inventory: "+err.Error(), true)
@@ -119,7 +119,7 @@ func (c *Controller) InventoryPost(writer http.ResponseWriter, req *http.Request
 
 		// load the inventory.json file
 		var inventoryItems Products
-		err = utilities.LoadFromJSONFile(InventoryFileName, &inventoryItems)
+		err = utilities.LoadFromJSONFile(c.inventoryFileName, &inventoryItems)
 		if err != nil {
 			c.lc.Errorf("Failed to retrieve all inventory items: %s", err.Error())
 			utilities.WriteStringHTTPResponse(writer, req, http.StatusInternalServerError, "Failed to retrieve all inventory items: "+err.Error(), true)
@@ -247,7 +247,7 @@ func (c *Controller) InventoryPost(writer http.ResponseWriter, req *http.Request
 
 		if inventoryChanged {
 			// Write the updated audit log to the audit log json file
-			err = utilities.WriteToJSONFile(InventoryFileName, inventoryItems, 0644)
+			err = utilities.WriteToJSONFile(c.inventoryFileName, inventoryItems, 0644)
 			if err != nil {
 				c.lc.Errorf("Failed to write inventory: %s", err.Error())
 				utilities.WriteStringHTTPResponse(writer, req, http.StatusInternalServerError, "Failed to write inventory: "+err.Error(), true)
@@ -309,7 +309,7 @@ func (c *Controller) AuditLogPost(writer http.ResponseWriter, req *http.Request)
 
 		// load the auditlog.json file
 		var auditLog AuditLog
-		err = utilities.LoadFromJSONFile(AuditLogFileName, &auditLog)
+		err = utilities.LoadFromJSONFile(c.auditLogFileName, &auditLog)
 		if err != nil {
 			c.lc.Errorf("Failed to retrieve all audit log entries: %s", err.Error())
 			utilities.WriteStringHTTPResponse(writer, req, http.StatusInternalServerError, "Failed to retrieve all audit log entries: "+err.Error(), true)
@@ -336,7 +336,7 @@ func (c *Controller) AuditLogPost(writer http.ResponseWriter, req *http.Request)
 			// write the result
 			auditLog.Data = append(auditLog.Data, postedAuditLogEntry)
 
-			err = utilities.WriteToJSONFile(AuditLogFileName, auditLog, 0644)
+			err = utilities.WriteToJSONFile(c.auditLogFileName, auditLog, 0644)
 			if err != nil {
 				c.lc.Errorf("Failed to write the audit log entry: %s : %s", postedAuditLogEntry.AuditEntryID, err.Error())
 				utilities.WriteStringHTTPResponse(writer, req, http.StatusInternalServerError, "Failed to write the audit log entry "+postedAuditLogEntry.AuditEntryID+": "+err.Error(), true)
